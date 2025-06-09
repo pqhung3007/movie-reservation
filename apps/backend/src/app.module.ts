@@ -6,6 +6,7 @@ import { UsersModule } from './users/users.module';
 import { DbModule } from './db/db.module';
 import { ConfigModule } from '@nestjs/config';
 import { CategoriesModule } from './categories/categories.module';
+import { MoviesModule } from './movies/movies.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { CategoriesModule } from './categories/categories.module';
       isGlobal: true,
       envFilePath: '.env',
     }),
+    MoviesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
