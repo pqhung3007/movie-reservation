@@ -1,6 +1,7 @@
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../common/entities/base.entity';
 import { Category } from '../../categories/entities/category.entity';
+import { Showtime } from '../../showtimes/entities/showtime.entity';
 
 @Entity()
 export class Movie extends BaseEntity {
@@ -21,4 +22,13 @@ export class Movie extends BaseEntity {
 
   @ManyToOne(() => Category, (category) => category.movies, { eager: false, nullable: false })
   category: Category;
+
+  @OneToMany(() => Showtime, (showtime) => showtime.movie)
+  showtimes: Showtime[];
+
+  @Column({ type: 'timestamp' })
+  availableFrom: Date;
+
+  @Column({ type: 'timestamp' })
+  availableUntil: Date;
 }

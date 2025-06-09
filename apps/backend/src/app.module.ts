@@ -7,6 +7,8 @@ import { DbModule } from './db/db.module';
 import { ConfigModule } from '@nestjs/config';
 import { CategoriesModule } from './categories/categories.module';
 import { MoviesModule } from './movies/movies.module';
+import { TheatersModule } from './theaters/theaters.module';
+import { ShowtimesModule } from './showtimes/showtimes.module';
 
 @Module({
   imports: [
@@ -19,6 +21,8 @@ import { MoviesModule } from './movies/movies.module';
       envFilePath: '.env',
     }),
     MoviesModule,
+    TheatersModule,
+    ShowtimesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
