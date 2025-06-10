@@ -6,9 +6,7 @@ import { SignupDto } from './dto/signup.dto';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    @InjectRepository(User) private userRepository: Repository<User>,
-  ) {}
+  constructor(@InjectRepository(User) private userRepository: Repository<User>) {}
 
   createUser({ email, password }: SignupDto): Promise<User> {
     const user = this.userRepository.create({ email, password });
@@ -17,5 +15,9 @@ export class UsersService {
 
   findByEmail(email: string): Promise<User | null> {
     return this.userRepository.findOne({ where: { email } });
+  }
+
+  getAllUsers() {
+    return this.userRepository.find();
   }
 }
