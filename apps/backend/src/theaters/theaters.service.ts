@@ -43,4 +43,14 @@ export class TheatersService {
 
     return this.theaterRepo.remove(theater);
   }
+
+  async findTheaterByMovie(movieId: string) {
+    return await this.theaterRepo
+      .createQueryBuilder('theater')
+      .leftJoin('theater.showtimes', 'showtime')
+      .leftJoin('showtime.movie', 'movie')
+      .where('movie.id = :movieId', { movieId })
+      .distinct(true)
+      .getMany();
+  }
 }

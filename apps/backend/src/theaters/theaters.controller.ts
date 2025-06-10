@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { TheatersService } from './theaters.service';
 import { ZodValidationPipe } from '../common/pipes/zod-validation.pipe';
 import {
@@ -13,7 +13,9 @@ export class TheatersController {
   constructor(private readonly theatersService: TheatersService) {}
 
   @Post()
-  createTheater(@Body(new ZodValidationPipe(createTheaterSchema)) createTheaterDto: ICreateTheaterDto) {
+  createTheater(
+    @Body(new ZodValidationPipe(createTheaterSchema)) createTheaterDto: ICreateTheaterDto,
+  ) {
     return this.theatersService.create(createTheaterDto);
   }
 
@@ -38,5 +40,10 @@ export class TheatersController {
   @Delete(':id')
   removeTheater(@Param('id') id: string) {
     return this.theatersService.remove(id);
+  }
+
+  @Get('/get-by-movie')
+  findTheaterByMovie(@Query('movieId') movieId: string) {
+    return this.theatersService.findTheaterByMovie(movieId);
   }
 }

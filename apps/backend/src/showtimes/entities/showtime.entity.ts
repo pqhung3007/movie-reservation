@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { Column, Entity, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../../common/entities/base.entity';
 import { Movie } from '../../movies/entities/movie.entity';
 import { Theater } from '../../theaters/entities/theater.entity';
