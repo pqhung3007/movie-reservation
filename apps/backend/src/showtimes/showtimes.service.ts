@@ -33,13 +33,11 @@ export class ShowtimesService {
 
     const sameDayShowtimes = await this.showRepo
       .createQueryBuilder('showtime')
-      .leftJoin('showtime.movie', 'movie')
+      .leftJoinAndSelect('showtime.movie', 'movie') // make sure movie is selected
       .leftJoin('showtime.theater', 'theater')
       .where('DATE(showtime.startTime) = :date', { date: showDateStr })
       .andWhere('showtime.theater = :theaterId', { theaterId })
       .getMany();
-
-    console.log('aaa', sameDayShowtimes);
 
     // Enforce limits per theater per day
     const distinctMovieIds = new Set(sameDayShowtimes.map((s) => s.movie.id));
