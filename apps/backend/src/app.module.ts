@@ -9,6 +9,7 @@ import { CategoriesModule } from './categories/categories.module';
 import { MoviesModule } from './movies/movies.module';
 import { TheatersModule } from './theaters/theaters.module';
 import { ShowtimesModule } from './showtimes/showtimes.module';
+import { ReservationsModule } from './reservations/reservations.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { ShowtimesModule } from './showtimes/showtimes.module';
     MoviesModule,
     TheatersModule,
     ShowtimesModule,
+    ReservationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

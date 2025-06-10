@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { Theater } from '../theaters/entities/theater.entity';
 import { Movie } from '../movies/entities/movie.entity';
 import { ICreateShowtimeDto } from './dto/showtime.dto';
+import { generateSeatMap } from './utils';
 
 @Injectable()
 export class ShowtimesService {
@@ -19,7 +20,7 @@ export class ShowtimesService {
 
     const movie = await this.movieRepo.findOne({ where: { id: movieId } });
     const theater = await this.theaterRepo.findOne({
-      where: { id: movieId },
+      where: { id: theaterId }, // fixed: used movieId incorrectly
       relations: ['showtimes'],
     });
 
@@ -38,7 +39,9 @@ export class ShowtimesService {
       .andWhere('showtime.theater = :theaterId', { theaterId })
       .getMany();
 
-    // enforce limits
+    console.log('aaa', sameDayShowtimes);
+
+    // Enforce limits per theater per day
     const distinctMovieIds = new Set(sameDayShowtimes.map((s) => s.movie.id));
     if (!distinctMovieIds.has(movieId)) {
       if (distinctMovieIds.size >= theater.dailyMovieLimit) {
@@ -46,10 +49,11 @@ export class ShowtimesService {
       }
     }
 
-    if (sameDayShowtimes.length >= theater.dailyMovieLimit) {
-      throw new BadRequestException('This theater has reached its daily movie limit');
+    if (sameDayShowtimes.length >= theater.dailyShowtimeLimit) {
+      throw new BadRequestException('This theater has reached its daily showtime limit');
     }
 
+    // Check movie availability window
     if (
       movie.availableFrom &&
       movie.availableUntil &&
@@ -58,13 +62,17 @@ export class ShowtimesService {
       throw new BadRequestException('Movie is not available at this time');
     }
 
-    const showTime = this.showRepo.create({
+    // ✅ Generate seat map (A1–H8)
+    const seatMap = generateSeatMap();
+
+    const newShowtime = this.showRepo.create({
       startTime: new Date(startTime),
       movie,
       theater,
+      seatMap,
     });
 
-    return this.showRepo.save(showTime);
+    return this.showRepo.save(newShowtime);
   }
 
   findAll() {
@@ -80,5 +88,19 @@ export class ShowtimesService {
       relations: ['movie', 'theater'],
       order: { startTime: 'ASC' },
     });
+  }
+
+  async getAvailableSeats(showtimeId: string) {
+    const showTime = await this.showRepo.findOne({ where: { id: showtimeId } });
+    if (!showTime) {
+      throw new NotFoundException('Showtime not found');
+    }
+
+    const availableSeats = showTime.seatMap.filter((seat) => !seat.isReserved);
+    return {
+      showtimeId,
+      totalSeats: showTime.seatMap.length,
+      availableSeats,
+    };
   }
 }
