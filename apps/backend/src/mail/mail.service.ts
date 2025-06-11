@@ -34,7 +34,10 @@ export class MailService {
         movie: showtime.movie.title,
         theater: showtime.theater.name,
         seat: reservation.seatNumber,
-        time: showtime.startTime.toLocaleString(),
+        time: showtime.startTime.toLocaleDateString('en-GB', {
+          hour: '2-digit',
+          minute: '2-digit',
+        }),
       },
     });
   }
