@@ -10,6 +10,7 @@ import { MoviesModule } from './movies/movies.module';
 import { TheatersModule } from './theaters/theaters.module';
 import { ShowtimesModule } from './showtimes/showtimes.module';
 import { ReservationsModule } from './reservations/reservations.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { ReservationsModule } from './reservations/reservations.module';
     TheatersModule,
     ShowtimesModule,
     ReservationsModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService],

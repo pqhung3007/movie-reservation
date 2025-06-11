@@ -4,12 +4,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Reservation } from './entities/reservation.entity';
 import { Repository } from 'typeorm';
 import { Showtime } from '../showtimes/entities/showtime.entity';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class ReservationsService {
   constructor(
     @InjectRepository(Reservation) private readonly reservationRepo: Repository<Reservation>,
     @InjectRepository(Showtime) private readonly showTimeRepo: Repository<Showtime>,
+    private readonly mailService: MailService,
   ) {}
 
   async create(createReservationDto: ICreateReservationDto) {
@@ -42,7 +44,8 @@ export class ReservationsService {
       seatNumber: seat,
     });
 
-    return this.reservationRepo.save(reservation);
+    const savedReservation = await this.reservationRepo.save(reservation);
+    await this.mailService.sendConfirmationEmail(savedReservation);
   }
 
   async cancelReservation(id: string) {
