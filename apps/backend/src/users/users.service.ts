@@ -8,8 +8,8 @@ import { SignupDto } from './dto/signup.dto';
 export class UsersService {
   constructor(@InjectRepository(User) private userRepository: Repository<User>) {}
 
-  createUser({ email, password }: SignupDto): Promise<User> {
-    const user = this.userRepository.create({ email, password });
+  createUser({ email, password, fullName }: SignupDto): Promise<User> {
+    const user = this.userRepository.create({ email, password, fullName });
     return this.userRepository.save(user);
   }
 
