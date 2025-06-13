@@ -26,11 +26,11 @@ export class MailService {
     }
 
     await this.mailerService.sendMail({
-      to: user.fullName,
+      to: user.email,
       subject: '🎟️ Reservation Confirmation',
       template: 'reservation', // reservation.hbs or reservation.pug in /templates
       context: {
-        name: user.email,
+        name: user.fullName,
         movie: showtime.movie.title,
         theater: showtime.theater.name,
         seat: reservation.seatNumber,
